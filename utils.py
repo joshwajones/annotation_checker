@@ -74,11 +74,11 @@ class Socket:
 class Command(Enum): 
     ACCEPT = ord('s')
     FLAG = ord('f')
-    MOVE_LEFT = 2 
-    MOVE_RIGHT = 3 
-    MOVE_LEFT_10 = ord('j')
-    MOVE_RIGHT_10 = ord('l')
-    MOVE_LEFT_100 = ord('u')
-    MOVE_RIGHT_100 = ord('o')
+    MOVE_LEFT = ord('j')
+    MOVE_RIGHT = ord('l')
+    MOVE_LEFT_10 = ord('u')
+    MOVE_RIGHT_10 = ord('o')
+    MOVE_LEFT_100 = ord('8')
+    MOVE_RIGHT_100 = ord('0')
     QUIT = ord('q')
     PASS = 0

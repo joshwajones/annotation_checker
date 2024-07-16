@@ -18,6 +18,7 @@ import numpy as np
 SHOW_UNLOGGED_ONLY = True 
 SAVE_EVERY = 5
 INCLUDE_EVERY = 1
+ALWAYS_START_UNLOGGED = True
 
 DEFAULT_DATASET_DESCRIPTION = DatasetDescription( 
     dataset_directory='/home/paulzhou/octo_dataset_utils/check_annotations/datasets', 
@@ -70,17 +71,20 @@ class Session:
         num_completed = len(self.log)
         num_total  = len(self.trajectories)
         self.client_print(f'Checked {num_completed}/{num_total} trajectories!')
-        response = self.client_ask_confirm('Continue from first un-checked trajectory?   (y/n)          ')
-        if response == 'y': 
-            for i, traj in enumerate(self.trajectories): 
-                if traj not in self.log: 
-                    break 
-            else: 
-                self.client_print("All trajectories checked! Quitting...")
-                raise Quit
-            self.traj_index = i
-        else: 
+        if ALWAYS_START_UNLOGGED: 
             self.traj_index = 0 
+        else: 
+            response = self.client_ask_confirm('Continue from first un-checked trajectory?   (y/n)          ')
+            if response == 'y': 
+                for i, traj in enumerate(self.trajectories): 
+                    if traj not in self.log: 
+                        break 
+                else: 
+                    self.client_print("All trajectories checked! Quitting...")
+                    raise Quit
+                self.traj_index = i
+            else: 
+                self.traj_index = 0 
 
     def print_instruction(self) -> None: 
         info = [] 
@@ -91,12 +95,12 @@ class Session:
             header = header + "#"
         info.append(header)
         info.append(
-            'Use the right/left arrow keys to move between trajectories, one at a time.'
+            'Use the "j" to move left, and "l" to move right between trajectories, one at a time.'
         )
         info.append(
-            'Use "j" and "l" to move between trajectories, 10 at a time.'
+            'Use "u" and "o" to move between trajectories, 10 at a time.'
         )
-        info.append('Or use "u" and "o" to move 100 at a time.\n')
+        info.append('Or use "8" and "0" to move 100 at a time.\n')
         info.append(
             'For every trajectory, compare the logged target image to the actual image. If the target object is correct, press "s". '
             + '\nOtherwise, or if there is any doubt, or the target image is unclear, press "f".'
